@@ -39,24 +39,29 @@ bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnC
 {
 	int index = 0;
 	int playerOutput = 0;
-
+	string playerName = NULL;
+	
 	if(playeID = 0)
 	{
 		output = 1;
+		playerName = "Red";
 	}
 	else
 	{
 		output = 2;
+		playerName = "Black";
 	}
 
 	if(columnChosen > numRowsInBoard || columnChosen < 0)
 	{
 		cout << "Illegal move";
+		return(false);
 	}
 	
-	else if(*(connectNBoard + columnChosen) == 1 || *(connectNBoard + columnChosen) == 2)
+	else if(*(connectNBoard + columnChosen) != 0)
 	{
 		cout << "Illegal move";
+		return(false);
 	}
 
 	else
@@ -70,10 +75,38 @@ bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnC
 		{
 			continue;
 		}
-		if(*((connectNBoard + columnChosen) * (numRowsInBoard - index)) += 0)
+		if(*((connectNBoard + columnChosen) * (numRowsInBoard - index)) == 0)
 		{
 			*((connectNBoard + columnChosen) * (numRowsInBoard - index)) = playerOutput;
 			break;
 		}
+		
 	}
+	cout << playerName << " has moved";
+	return(true);
+}
 
+bool DisplayBoard( int** connectNBoard,  int numRowsInBoard)
+{
+        int index = 0;
+        bool border = false;
+        
+        if(border == false)
+        {
+                for(index = 0; index < numRowsInBoard; index++)
+                {
+                        cout << setw(3) << right << index;
+                        border = true;
+                }
+                continue;
+        }
+        for(index = 0; index < numRowsInBoard; index++)
+        {
+                cout << setw(3) << right << index << *(connectNBoard + index);
+                if(index%numRowsInBoard - 1 = numRowsInBoard)
+                {
+                        cout << endl;
+                }
+        }
+        return(true);
+}
