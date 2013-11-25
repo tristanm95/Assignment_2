@@ -17,8 +17,11 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 
 int main()
 {
+  const int minRowsToWin = 4;
+  
   //initialize and declare variables
   int numRows = 0;
+  int numToConnect = 0;
   
   //first prompt
   do
@@ -27,6 +30,12 @@ int main()
     cin >> numRows;
   }while (( numRows < MIN_ARRAY_SIZE ) || ( numRows > MAX_ARRAY_SIZE ));
   
+  do
+  {
+    cout << "Please enter the number of game pieces in a row needed to win the game";
+    cin >> numToConnect;
+    
+  }while ( !(minRowsToWin <= numToConnect) || !(numToConnect <= numRows - minRowsToWin));
   return 0; 
 }
 
