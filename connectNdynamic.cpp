@@ -13,8 +13,8 @@ bool CheckWinner(int **connectNBoard, int numRowsInBoard, int numConnect, int co
 int main()
 {
 	char **connectNBoardpp;
-	int index = 0;
-	int jindex = 0;
+	int i = 0;
+	int j = 0;
 	int numRows = 0;
 	int numConnect = 0;
 	int numToConnect = 0;
@@ -93,5 +93,13 @@ int main()
 		}
 	}
 	
+	
+	for(i = 0; i < numRows; i++)
+	{
+		delete [] connectNBoardpp[i];
+		connectNBoard[i] = NULL;
+	}
+	
+	delete [] connectNBoardpp;
 	return 0;
 }
