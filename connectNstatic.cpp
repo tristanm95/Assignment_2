@@ -39,6 +39,12 @@ int main()
     cin >> numToConnect;
     
   }while ( !(minRowsToWin <= numToConnect) || !(numToConnect <= numRows - minRowsToWin));
+  
+  if (!(InitializeBoard(connectNArray,numRows)));
+  {
+    exit(1);
+  }
+  
   return 0; 
 }
 
