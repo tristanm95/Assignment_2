@@ -99,7 +99,7 @@ bool DisplayBoard( int** connectNBoard,  int numRowsInBoard)
 	return true;
 }
 
-bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int columnChosen, int player)
+bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int columnChosen, int playerID)
 {
 	int afterCount = 0;
 	int beforeCount = 0;
@@ -113,6 +113,29 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 		return false;
 	}
 	
+	//Vertical Checker
 	for(i = (numRowsInBoard - 1); i > 0; i++)
+	{
+		if(connectNBoard[i][columnChosen] != 'o')
+		{
+			vertCount++;
+		}
+		if(vertCount >= numConnect)
+		{
+			return true;
+		}
+	}
+	
+	//Horizontal Checker to the right of columnChosen
+	
+	//Horizontal Checker to the left of columnChosen
+	
+	//Diagonal Checker to the top right of columnChosen
+	
+	//Diagonal Checker to the bottom left of columnChosen
+	
+	//Diagonal Checker to the bottom right of columnChosen
+	
+	//Diagonal CHecker to the top left of oclumnChosen
 
 }
