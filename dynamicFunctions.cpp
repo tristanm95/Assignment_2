@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <iostream>
 #include <string>
 #include <cmath>
 
@@ -12,99 +13,90 @@ bool CheckWinner( int** connectNBoard, int numRowsInBoard, int numConnect, int c
 
 bool InitializeBoard(int** connectNBoard,  int numRowsInBoard)
 {
-	int index = 0;
-	int columnIndex = 0;
-
-	int *startBoardp = NULL;
-	int *endBoardp = NULL;
-
-	connectNBoard = new (nothrow) int[numRowsInBoard];
-	if(connectNBoard == NULL)
+	int i = 0;
+	int j = 0;
+	
+	for(i = 0; i < numRowsInBoard; i++)
 	{
-		return false;
+		for(j = 0; j < numRowsInBoard; j++)
+		{
+			if(!(connectNBoard[i][j] = 'o'))
+			{
+				cerr << "The board was not initialized";
+				return false;
+			}
+		}
 	}
 
-	for(index = 0; index < numRowsInBoard; index++)
-	{
-		*(connectNBoard + index) = 0;
-	}
+
 	return true;
 }
 
 bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnChosen)
 {
-	int index = 0;
-	int playerOutput = 0;
-	string playerName = NULL;
+	int i = 0;
+	int j = 0;
 	
-	if(playeID = 0)
+	if(columnChosen < 0 || columnChosen > numRowsInBoard)
 	{
-		output = 1;
-		playerName = "Red";
-	}
-	else
-	{
-		output = 2;
-		playerName = "Black";
-	}
-
-	if(columnChosen > numRowsInBoard || columnChosen < 0)
-	{
-		cout << "Illegal move";
+		cout << "Illegal Move" << endl;
 		return false;
 	}
 	
-	else if(*(connectNBoard + columnChosen) != 0)
+	if(connectNBoard[columnChosen][0] != 'o')
 	{
-		cout << "Illegal move";
+		cout << "Illegal Move" << endl
 		return false;
 	}
-
-	else
+	
+	for(i = (numRowsInBoard - 1); i >= 0; i--)
 	{
-		NULL;
-	}
-
-	for(index = 0; index < numRowsInBoard; index++)
-	{
-		if(*((connectNBoard + columnChosen) * (numRowsInBoard - index)) != 0)
+		if(connectNBoard[i][columnChosen] == 'o')
 		{
-			continue;
+			if(playeID == 1)
+			{
+				connectNBoard[i][columnChosen] = 'R';
+				cout << "Red has moved";
+				return true;
+			}
+			else if(playeID == 2)
+			{
+				connectNBoard[i][columnChosen] = 'B';
+				cout << "Black has moved";
+				return true;
+			}
+			else
+			{
+				cerr << "Something went wrong in the MakeMove function";
+				return false;
+			}
+			
 		}
-		if(*((connectNBoard + columnChosen) * (numRowsInBoard - index)) == 0)
-		{
-			*((connectNBoard + columnChosen) * (numRowsInBoard - index)) = playerOutput;
-			break;
-		}
-		
 	}
-	cout << playerName << " has moved";
-	return true;
+	
+	return false;
 }
 
 bool DisplayBoard( int** connectNBoard,  int numRowsInBoard)
 {
-        int index = 0;
-        bool border = false;
-        
-        if(border == false)
-        {
-                for(index = 0; index < numRowsInBoard; index++)
-                {
-                        cout << setw(3) << right << index;
-                        border = true;
-                }
-                continue;
-        }
-        for(index = 0; index < numRowsInBoard; index++)
-        {
-                cout << setw(3) << right << index << *(connectNBoard + index);
-                if(index%numRowsInBoard - 1 = numRowsInBoard)
-                {
-                        cout << endl;
-                }
-        }
-        return true;
+	int i = 0;
+	int j = 0;
+	
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		cout << setw(3) << right << i;
+	}
+	cout << endl
+	
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		cout << setw(3) << right << i;
+		for(j = 0; j < numRowsInboard)
+		{
+			cout << setw(3) << right << connectNBoard[i][j];
+		}
+	}
+	return true;
 }
 
 bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int columnChosen, int player)
@@ -112,60 +104,15 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	int afterCount = 0;
 	int beforeCount = 0;
 	int vertCount = 0;
-	int index = 0;
-	//Add errors below this comment for invalid columns chosen
-	//
-	//
+	int i = 0;
+	int j = 0;
 	
-	//Checks to the left of the column chosen
-	for(index = numConnect - 1; index >= 0; index--)
+	if(columnChosen > (numRowsInBoard + 1) || columnChosen < 0)
 	{
-		if(*((connectNBoard + columnChosen) * index) != 0)
-		{
-			beforeCount += 1;
-		}
-		else
-		{
-			break;
-		}
+		cerr << "ERROR: invalid column chosen, cannot check for winner";
+		return false;
 	}
 	
-	//Checks to the right of the column chosen
-	for(index = 0; index < numConnect; index++)
-	{
-		if(*((connectNBoard + columnChosen) * index) != 0)
-		{
-			afterCount += 1;
-		}
-		else
-		{
-			break;
-		}
-	}
-	
-	//Checks to see if the player has won by row
-	if(beforeCount + afterCount + 1 >= numConnect)
-	{
-		return true;
-	}
-	
-	//Checks below the column to see if 
-	for(index = numConnect - 1; index >= 0; index--)
-	{
-		if(*(connectNBoard + index) != 0)
-		{
-			vertCount += 0;
-		}
-		else
-		{
-			break;
-		}
-	}
-	//Checks to see if the player has won by column
-	if(vertCount + 1 >= numConnect)
-	{
-		return true;
-	}
-	
-	//Another function will go here to check the diagnoal parts
+	for(i = (numRowsInBoard - 1); i > 0; i++)
+
 }
