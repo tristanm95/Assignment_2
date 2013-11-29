@@ -3,7 +3,7 @@
 #include <string>
 #include <cmath>
 
-include namespace std;
+using namespace std;
 
 bool InitializeBoard(int **connectNBoard,  int numRowsInBoard );
 bool MakeMove(int **connectNBoard, int numRowsInBoard,  int player, int columnChosen);
@@ -12,13 +12,15 @@ bool CheckWinner(int **connectNBoard, int numRowsInBoard, int numConnect, int co
 
 int main()
 {
-	char **connectNBoardpp;
+	int **connectNBoardpp;
 	int i = 0;
+	int index = 0;
 	int j = 0;
 	int numRows = 0;
 	int numConnect = 0;
 	int numToConnect = 0;
 	int playerID = 0;
+	int colChosen = 0;
 	int forfeitIndex = 0;
 	int turnIndex = 0;
 	
@@ -26,16 +28,20 @@ int main()
 	do
 	{
 		cout << "Please enter the size of the board" << endl;
-		cout << "8 <= numRows <= 25";
+		cout << "8 <= numRows <= 25: ";
+		cin.clear();
+		cin.sync();
 	}
 	while(!(cin >> numRows) || !(8 <= numRows && numRows <= 25));
 	
 	do
 	{
 		cout << "Please enter the number of pieces in a row to win" << endl;
-		cout << "4 <= numToConnect <= numRows - 4";
+		cout << "4 <= numToConnect <= numRows - 4: ";
+		cin.clear();
+		cin.sync();
 	}
-	while(!(cin >> numToConnect) || !(4 <= numToConnect <= (numRows - 4)));
+	while(!(cin >> numToConnect) || !(4 <= numToConnect && numToConnect <= (numRows - 4)));
 	
 	connectNBoardpp = new int* [numRows];
 	
@@ -44,52 +50,82 @@ int main()
 		*(connectNBoardpp + index) = new int [numRows];
 	}
 	
-	if(!(InitializeBoard(connecNBoardpp, numRows))
-	{
-		exit(1)
-	}
-	
-	
-	//Put this into a loop
-	for(turnIndex = 0; turnIndex < 99999999999999; turnIndex ++)
-	{
-
-		if(!(MakeMove(connectNBoardpp, numRows, playerID, columnChosen)))
+	if(!(InitializeBoard(connectNBoardpp, numRows)))
+	{		
+		for(i = 0; i < numRows; i++)
 		{
-			forfeitIndex++;
-			if(forfeitIndex <= 3)
-			{
-				if(playerID == 1)
-				{
-					cout << "Red has forfeited a turn" << endl;
-					continue;
-				}
-				if(playerID == 2)
-				{
-					cout << "Black has forfeited a turn" << endl;
-					continue;
-				}
-			}
+			delete [] connectNBoardpp[i];
+			connectNBoardpp[i] = NULL;
 		}
 		
-		if(CheckWinner(connectNBoardpp, numRows, numToConnect, columnChosen, playerID))
+		delete [] connectNBoardpp;
+		exit(1);
+	}
+	
+	cout << "Red goes first";
+	playerID = 1;
+
+	for(turnIndex = 0; turnIndex < (numRows * numRows); turnIndex++)
+	{
+		cin.clear();
+		cin.sync();
+		if(!(DisplayBoard(connectNBoardpp, numRows)))
+		{
+			cerr << "ERROR: COULD NOT DISPLAY BOARD";
+			for(i = 0; i < numRows; i++)
+			{
+				delete [] connectNBoardpp[i];
+				connectNBoardpp[i] = NULL;
+			}
+	
+			delete [] connectNBoardpp;
+			exit(3);
+		}
+		cout << "Enter the column number you wish to place a piece within ";
+		cin >> colChosen;
+
+		while(!(MakeMove(connectNBoardpp, numRows, playerID, colChosen)))
+		{
+			forfeitIndex += 1;
+			break;
+		}
+
+		if(forfeitIndex >= 3 && playerID == 1)
+		{
+			cout << "Red has forfeited their move";
+			playerID = 2;
+			forfeitIndex = 0;
+			continue;
+		}
+		if(forfeitIndex >= 3 && playerID == 2)
+		{
+			cout << "Black has forfeited their move";
+			playerID = 1;
+			forfeitIndex = 0;
+			continue;
+		}
+		forfeitIndex = 0;
+
+		if(CheckWinner(connectNBoardpp, numRows, numToConnect, colChosen, playerID))
 		{
 			if(playerID == 1)
 			{
-				cout << "Red has won";
-				break;
+				cout << endl << "Red has won";
 			}
 			if(playerID == 2)
 			{
-				cout << " Black has won";
-				break;
+				cout << endl << "Black has won";
 			}
 		}
 		
-		if(!(DisplayBoard(connectNBoardpp, numRows)))
+
+		if(playerID == 1)
 		{
-			cerr << "Could not display board";
-			exit(2);
+			playerID = 2;
+		}
+		else
+		{
+			playerID = 1;
 		}
 	}
 	
@@ -97,9 +133,351 @@ int main()
 	for(i = 0; i < numRows; i++)
 	{
 		delete [] connectNBoardpp[i];
-		connectNBoard[i] = NULL;
+		connectNBoardpp[i] = NULL;
 	}
 	
 	delete [] connectNBoardpp;
 	return 0;
 }
+
+bool InitializeBoard(int** connectNBoard,  int numRowsInBoard)
+{
+	int i = 0;
+	int j = 0;
+	
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		for(j = 0; j < numRowsInBoard; j++)
+		{
+			connectNBoard[i][j] = 0;
+			if(connectNBoard[i][j] < 0 || connectNBoard[i][j] > 2)
+			{
+				cerr << "The board was not initialized";
+				return false;
+			}
+		}
+	}
+
+
+	return true;
+}
+
+bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnChosen)
+{
+	int i = 0;
+	int j = 0;
+	
+	if(columnChosen < 0 || columnChosen > numRowsInBoard)
+	{
+		cout << "Illegal Move" << endl;
+		return false;
+	}
+	
+	
+	for(i = (numRowsInBoard - 1); i >= 0; i--)
+	{
+		if(connectNBoard[i][columnChosen] == 0)
+		{
+			if(playeID == 1)
+			{
+				connectNBoard[i][columnChosen] = 1;
+				cout << "Red has moved";
+				return true;
+			}
+			else if(playeID == 2)
+			{
+				connectNBoard[i][columnChosen] = 2;
+				cout << "Black has moved";
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+	}
+	
+	return false;
+}
+
+bool DisplayBoard( int** connectNBoard,  int numRowsInBoard)
+{
+	int i = 0;
+	int j = 0;
+
+	cout << endl << setw(3) << " ";
+
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		cout << setw(3) << right << i;
+	}
+	cout << endl;
+	
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		cout << setw(3) << left << i;
+		for(j = 0; j < numRowsInBoard; j++)
+		{
+			if(j%(numRowsInBoard + 1) == numRowsInBoard)
+			{
+				cout << endl;
+			}
+
+			if(connectNBoard[i][j] == 1)
+			{
+				cout << setw(3) << right << 'R';
+			}
+			else if(connectNBoard[i][j] == 2)
+			{
+				cout << setw(3) << right << 'B';
+			}
+			else
+			{
+				cout << setw(3) << right << 'o';
+			}
+		}
+		cout << endl;
+	}
+	cout << endl;
+	return true;
+}
+
+bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int columnChosen, int playerID)
+{
+	int afterCount = 0;
+	int beforeCount = 0;
+	int vertLOC = 0;
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	
+	if(columnChosen > (numRowsInBoard + 1) || columnChosen < 0)
+	{
+		cerr << "ERROR: invalid column chosen, cannot check for winner";
+		return false;
+	}
+
+	for(i = 0; i < numRowsInBoard; i++)
+	{
+		if(connectNBoard[i][columnChosen] == 1 && playerID == 1)
+		{
+			vertLOC = i;
+			break;
+		}
+		else if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
+		{
+			vertLOC = i;
+			break;
+		}
+		else if(connectNBoard[i][columnChosen] != 0)
+		{
+			break;
+		}
+		else
+		{
+			continue;
+		}
+		
+	}
+
+	//Vertical Checker Below
+	for(i = vertLOC + 1; i < numRowsInBoard; i++)
+	{
+		if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
+		{
+			beforeCount += 1;
+		}
+		else if(connectNBoard[i][columnChosen] == 1 && playerID == 1)
+		{
+			beforeCount += 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	
+	//Vertical Checker above
+	for(i = vertLOC - 1; i >= 0; i--)
+	{
+		if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
+		{
+			beforeCount += 1;
+		}
+		else if(connectNBoard[i][columnChosen] == 1 && playerID == 1)
+		{
+			beforeCount += 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	if((beforeCount + afterCount + 1) >= numConnect)
+	{
+		return true;
+	}
+	
+	beforeCount = 0;
+	afterCount = 0;
+
+
+	//Horizontal Checker to the right of columnChosen
+	for(i = columnChosen + 1; i < numRowsInBoard; i++)
+	{
+		if(connectNBoard[vertLOC][i] == 2 && playerID == 2)
+		{
+			afterCount += 1;
+		}
+		else if(connectNBoard[vertLOC][i] == 1 && playerID == 1)
+		{
+			afterCount += 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	//Horizontal Checker to the left of columnChosen
+	for(i = columnChosen - 1; i >= 0; i--)
+	{
+		if(connectNBoard[vertLOC][i] == 2 && playerID == 2)
+		{
+			beforeCount += 1;
+		}
+		else if(connectNBoard[vertLOC][i] == 1 && playerID == 1)
+		{
+			beforeCount += 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	if((beforeCount + afterCount + 1) >= numConnect)
+	{
+		return true;
+	}
+	
+	beforeCount = 0;
+	afterCount = 0;
+	k = 0;
+
+
+	//Diagonal Checker to the bottom right of columnChosen
+	for(i = vertLOC + 1; i < numRowsInBoard; i++)
+	{
+		k += 1;
+		for(j = columnChosen + k; j < numRowsInBoard; j++)
+		{
+			if(connectNBoard[i][j] == 1 && playerID == 1)
+			{
+				afterCount += 1;
+				break;
+			}
+			else if(connectNBoard[i][j] == 2 && playerID == 2)
+			{
+				afterCount += 1;
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	
+	k = 0;
+
+	//Diagonal Checker to the top left of columnChosen
+	for(i = vertLOC - 1; i >= 0; i--)
+	{
+		k += 1;
+		for(j = columnChosen - k; j >= 0; j--)
+		{
+			if(connectNBoard[i][j] == 1 && playerID == 1)
+			{
+				beforeCount += 1;
+				break;
+			}
+			else if(connectNBoard[i][j] == 2 && playerID == 2)
+			{
+				beforeCount += 1;
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	
+	if(beforeCount + afterCount + 1 >= numConnect)
+	{
+		return true;
+	}
+
+	beforeCount = 0;
+	afterCount = 0;
+	k = 0;
+
+	//Diagonal Checker to the top right of columnChosen
+	for(i = vertLOC - 1; i >= 0; i--)
+	{
+		k += 1;
+		for(j = columnChosen + k; j < numRowsInBoard; j++)
+		{
+			if(connectNBoard[i][j] == 1 && playerID == 1)
+			{
+				afterCount += 1;
+				break;
+			}
+			else if(connectNBoard[i][j] == 2 && playerID == 2)
+			{
+				afterCount += 1;
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	
+	k = 0;
+
+	//Diagonal Checker to the bottom left of columnChosen
+	for(i = vertLOC + 1; i < numRowsInBoard; i++)
+	{
+		k += 1;
+		for(j = columnChosen - k; j > 0; j--)
+		{
+			if(connectNBoard[i][j] == 1 && playerID == 1)
+			{
+				beforeCount += 1;
+				break;
+			}
+			else if(connectNBoard[i][j] == 2 && playerID == 2)
+			{
+				beforeCount += 1;
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
+	
+	if((beforeCount + afterCount + 1) >= numConnect)
+	{
+		return true;
+	}
+
+}
+
