@@ -204,7 +204,6 @@ bool InitializeBoard(int** connectNBoard,  int numRowsInBoard)
 			//if the above statement does not work, output an error message and return false
 			if(connectNBoard[i][j] < 0 || connectNBoard[i][j] > 2)
 			{
-				cerr << "The board was not initialized";
 				return false;
 			}
 		}
