@@ -156,16 +156,17 @@ bool DisplayBoard (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRow
 	int i = 0;
 	int j = 0;
 
-	cout << endl << setw(3) << " ";
+	cout << endl << setw(3) << left << " ";
 	for (i = 0; i < numRowsInBoard; i++)
 	{
-		cout << setw(3) << i;
+		cout << setw(3) << right << i;
 	}
 	cout << endl;
 
 	for (i = 0; i < numRowsInBoard; i++)
 	{
 		cout << left << setw(3) << i;
+
 		for (j = 0; j < numRowsInBoard; j++)
 		{
 			if ( (j % (numRowsInBoard + 1)) == numRowsInBoard)
@@ -175,15 +176,19 @@ bool DisplayBoard (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRow
 			if (connectNBoard[i][j] == 1)//R, 2 = B
 			{
 				cout << setw(3) << right << "R";
-			}else if (connectNBoard[i][j] == 2)
+			}
+			else if (connectNBoard[i][j] == 2)
 			{
 				cout << setw(3) << right << "B"; 
-			}else 
+			}
+			else 
 			{
 				cout << setw(3) << right << "o";
 			}
 		}
+		cout << endl;
 	}
+	cout << endl;
 	return true;
 }
 
