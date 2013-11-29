@@ -3,6 +3,12 @@
 #include <iomanip>
 
 using namespace std;
+//This program is for the game called connectN. It is played similarily to connect 4, however the board and the number
+//needed to connect are customizable by the players.
+//
+//
+//Date: 11/29/2013
+//Authors: Tristan May, Frank Su, Jason Park, Danielle Sinha
 
 //Function prototypes for main()
 bool InitializeBoard(int **connectNBoard,  int numRowsInBoard );
