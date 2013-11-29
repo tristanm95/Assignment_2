@@ -371,6 +371,24 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 		}
 	}
 	
+	
+   //Vertical Checker above
+    for(i = vertLOC - 1; i >= 0; i--)
+    {
+      if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
+      {
+        beforeCount += 1;
+      }
+      else if(connectNBoard[i][columnChosen] == 1 && playerID == 1)
+      {
+        beforeCount += 1;
+      }
+      else
+      {
+        break;
+      }
+    }
+
 	//Adds the beforeCount and the actual location and check if it's greater than numConnect
 	if((beforeCount +  1) >= numConnect)
 	{
@@ -379,6 +397,7 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	
 	//Resets the values of beforeCount to 0
 	beforeCount = 0;
+	afterCount = 0;
 
 
 	//Counts the pieces of the current player to the right of the most recently placed piece
@@ -458,7 +477,7 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	//resets the value of k
 	k = 0;
 
-	//Counts the number of pieces of the given player to the bottom left, and adds them to beforeCount
+	//Counts the number of pieces of the given player to the top left, and adds them to beforeCount
 	//k is used to move the location of the board column to the left by one each time
 	//around the loop
 	for(i = vertLOC - 1; i >= 0; i--)
@@ -553,5 +572,5 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	{
 		return true;
 	}
-
+	return false;
 }
