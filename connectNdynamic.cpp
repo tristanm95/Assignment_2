@@ -69,6 +69,7 @@ int main()
 	{
 		cin.clear();
 		cin.sync();
+		cout << endl;
 		if(!(DisplayBoard(connectNBoardpp, numRows)))
 		{
 			cerr << "ERROR: COULD NOT DISPLAY BOARD";
@@ -84,22 +85,24 @@ int main()
 		cout << "Enter the column number you wish to place a piece within ";
 		cin >> colChosen;
 
-		while(!(MakeMove(connectNBoardpp, numRows, playerID, colChosen)))
+		while(!(MakeMove(connectNBoardpp, numRows, playerID, colChosen)) && forfeitIndex < 3)
 		{
 			forfeitIndex += 1;
-			break;
+			cin.clear();
+			cin.sync();
+			cin >> colChosen;
 		}
 
 		if(forfeitIndex >= 3 && playerID == 1)
 		{
-			cout << "Red has forfeited their move";
+			cout << endl << "Red has forfeited their move";
 			playerID = 2;
 			forfeitIndex = 0;
 			continue;
 		}
 		if(forfeitIndex >= 3 && playerID == 2)
 		{
-			cout << "Black has forfeited their move";
+			cout << endl << "Black has forfeited their move";
 			playerID = 1;
 			forfeitIndex = 0;
 			continue;
@@ -111,10 +114,12 @@ int main()
 			if(playerID == 1)
 			{
 				cout << endl << "Red has won";
+				break;
 			}
 			if(playerID == 2)
 			{
 				cout << endl << "Black has won";
+				break;
 			}
 		}
 		
@@ -167,12 +172,23 @@ bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnC
 	int i = 0;
 	int j = 0;
 	
-	if(columnChosen < 0 || columnChosen > numRowsInBoard)
+	if(columnChosen < 0 || columnChosen >= numRowsInBoard)
 	{
 		cout << "Illegal Move" << endl;
+		cout << "That column is not on the board: try again" << endl;
+		cout << "Enter the column number where you want to put your piece" << endl;
+		cout << "Column number should be >=0 and <= " << numRowsInBoard - 1 << " " << endl;
 		return false;
 	}
 	
+	if(connectNBoard[0][columnChosen] != 0)
+	{
+		cout << "Illegal Move" << endl;
+		cout << "Column" << columnChosen << "is already completely full try again" << endl;
+		cout << "Enter column number where you want to put your piece" << endl;
+		cout << "Column number should be >= 0 and <= " << numRowsInBoard - 1 << " " << endl;
+		return false;
+	}
 	
 	for(i = (numRowsInBoard - 1); i >= 0; i--)
 	{
@@ -455,7 +471,7 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	for(i = vertLOC + 1; i < numRowsInBoard; i++)
 	{
 		k += 1;
-		for(j = columnChosen - k; j > 0; j--)
+		for(j = columnChosen - k; j >= 0; j--)
 		{
 			if(connectNBoard[i][j] == 1 && playerID == 1)
 			{
@@ -480,4 +496,3 @@ bool CheckWinner(int** connectNBoard, int numRowsInBoard, int numConnect, int co
 	}
 
 }
-
