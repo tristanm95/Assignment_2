@@ -45,7 +45,7 @@ int main()
 	}
 	while(!(cin >> numRows) || !(8 <= numRows && numRows <= 25));
 	
-	//Request from user the size of the board and repeat if it is out of range or an invalid character
+	//Request from user number of pieces a player must have to win
 	do
 	{
 		cout << "Please enter the number of pieces in a row to win" << endl;
