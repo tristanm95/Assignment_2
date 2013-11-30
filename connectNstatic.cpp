@@ -206,8 +206,8 @@ bool MakeMove (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInB
 	if (columnChosen < 0 || (columnChosen > numRowsInBoard))
 	{
 		cout << endl << "Illegal Move" << endl;
-		cout << "That column is not on the board: try again" << endl;
-		cout << "Enter the column number where you want to put your piece" << endl <<endl;
+		cout << "That column is not on the board: try again" << endl << endl;
+		cout << "Enter the column number where you want to put your piece" << endl;
 		cout << "Column number should be >=0 and <= " << numRowsInBoard - 1 << " ";
 		return false;
 	}
