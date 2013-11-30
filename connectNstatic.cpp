@@ -258,7 +258,7 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 	int j = 0;
 	int k = 0;
 
-	if (columnChosen < 0 || (columnChosen > numRowsInBoard -1))
+	if ((columnChosen < 0) || (columnChosen > numRowsInBoard -1))
 	{
 		cerr << "ERROR: invalid column chosen, cannot check for winner";
 		return false;
@@ -290,11 +290,11 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 	//Counts the number of pieces of a certain player below the piece that was placed
 	for(i = vertLOC + 1; i < numRowsInBoard; i++)
 	{
-		if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
+		if((connectNBoard[i][columnChosen] == 2) && (playerID == 2))
 		{
 			beforeCount += 1;
 		}
-		else if(connectNBoard[i][columnChosen] == 1 && playerID == 1)
+		else if((connectNBoard[i][columnChosen] == 1) && (playerID == 1))
 		{
 			beforeCount += 1;
 		}
@@ -322,7 +322,7 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 	}
 
 	//Adds the beforeCount and the actual location and check if it's greater than numConnect
-	if ( beforeCount  >= numConnect )
+	if ( (beforeCount + 1) >= numConnect )
 	{      
 		return true;
 	}
@@ -388,12 +388,12 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		k += 1;
 		for(j = columnChosen + k; j < numRowsInBoard; j++)
 		{
-			if(connectNBoard[i][j] == 1 && playerID == 1)
+			if((connectNBoard[i][j] == 1) && (playerID == 1))
 			{
 				afterCount += 1;
 				break;
 			}
-			else if(connectNBoard[i][j] == 2 && playerID == 2)
+			else if((connectNBoard[i][j] == 2) && (playerID == 2))
 			{
 				afterCount += 1;
 				break;
