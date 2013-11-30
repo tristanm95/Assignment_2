@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <cmath>
 #include <iomanip>
 using namespace std;
 
@@ -55,6 +53,7 @@ int main()
 
 	}while (  !(cin >> numToConnect)|| !(minRowsToWin <= numToConnect) || !(numToConnect <= numRows - minRowsToWin));
 
+	cout << endl;
 
 	if (!(IntializeBoard(connectNBoard,numRows)))
 	{
@@ -68,6 +67,7 @@ int main()
 	{
 		cin.clear();
 		cin.sync();
+		cout << endl;
 
 		if(!(DisplayBoard(connectNBoard, numRows)))
 		{
@@ -75,55 +75,60 @@ int main()
 			exit (2);
 		}
 
-	}
-	cout << "Enter the column number you wish to place piece within ";
-	cin >> colChosen;
+		cout << "Enter the column number you wish to place piece within ";
+		cin >> colChosen;
 
-	while(!(MakeMove(connectNBoard, numRows, playerID, colChosen)))
-	{
-		forfeitIndex += 1;
-		break;
-	}
-
-	if(forfeitIndex >= 3 && playerID == 1)
-	{
-		cout << "Red has forfeited their move";
-		playerID = 2;
-		forfeitIndex = 0;
-	}
-	
-	if(forfeitIndex >= 3 && playerID == 2)
-	{
-		cout << "Black has forfeited their move";
-		playerID = 1;
-		forfeitIndex = 0;
-		
-	}
-
-	forfeitIndex = 0;
-
-	if(CheckWinner(connectNBoard, numRows, numToConnect, colChosen, playerID))
-	{
-		if(playerID == 1)
+		while(!(MakeMove(connectNBoard, numRows, playerID, colChosen)) && forfeitIndex < 3)
 		{
-			cout << endl << "Red has won";
+			forfeitIndex += 1;
+			cin.clear();
+			cin.sync();
+			cin >> colChosen;
 		}
-		if(playerID == 2)
+
+		if(forfeitIndex >= 3 && playerID == 1)
 		{
-			cout << endl << "Black has won";
+			cout << "Red has forfeited their move";
+			playerID = 2;
+			forfeitIndex = 0;
+			continue;
+		}
+	
+		if(forfeitIndex >= 3 && playerID == 2)
+		{
+			cout << "Black has forfeited their move";
+			playerID = 1;
+			forfeitIndex = 0;
+			continue;
+		}
+
+		forfeitIndex = 0;
+
+		if(CheckWinner(connectNBoard, numRows, numToConnect, colChosen, playerID))
+		{
+			if(playerID == 1)
+			{
+				cout << endl << "Red has won";
+				break;
+			}
+			if(playerID == 2)
+			{
+				cout << endl << "Black has won";
+				break;
+			}
+		}
+
+
+		if (playerID == 1)
+		{
+			playerID = 2;
+		}
+		else
+		{
+			playerID = 1;
 		}
 	}
 
-
-	if (playerID == 1)
-	{
-		playerID = 2;
-	}
-	else
-	{
-		playerID = 1;
-	}
-	
 	return 0; 
 }
 
@@ -157,6 +162,7 @@ bool DisplayBoard (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRow
 	int j = 0;
 
 	cout << endl << setw(3) << left << " ";
+
 	for (i = 0; i < numRowsInBoard; i++)
 	{
 		cout << setw(3) << right << i;
@@ -165,7 +171,7 @@ bool DisplayBoard (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRow
 
 	for (i = 0; i < numRowsInBoard; i++)
 	{
-		cout << left << setw(3) << i;
+		cout << left << setw(3) << left << i;
 
 		for (j = 0; j < numRowsInBoard; j++)
 		{
@@ -199,7 +205,20 @@ bool MakeMove (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInB
 
 	if (columnChosen < 0 || (columnChosen > numRowsInBoard))
 	{
-		cerr << "Illegal Move";
+		cout << endl << "Illegal Move" << endl;
+		cout << "That column is not on the board: try again" << endl;
+		cout << "Enter the column number where you want to put your piece" << endl <<endl;
+		cout << "Column number should be >=0 and <= " << numRowsInBoard - 1 << " ";
+		return false;
+	}
+	
+	//checking to see if the column has been all filled
+	if(connectNBoard[0][columnChosen] != 0)
+	{
+		cout << endl << "Illegal Move" << endl;
+		cout << "Column " << columnChosen << " is already completely full try again" << endl << endl;
+		cout << "Enter column number where you want to put your piece" << endl;
+		cout << "Column number should be >= 0 and <= " << numRowsInBoard - 1 << " ";
 		return false;
 	}
 
@@ -217,14 +236,15 @@ bool MakeMove (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInB
 				connectNBoard[i][columnChosen] = 2;
 				cout << "Black has moved";
 				return true;
-			}else 
+			}
+			else 
 			{
 				return false;
 			}
 		}
 	}
 
-	return true;
+	return false;
 }
 
 
@@ -244,7 +264,8 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		return false;
 	}
 
-	//veritcal check
+	//This for loop determines the row that the last piece was placed and stores it
+	//into vertLOC
 	for (i = 0; i < numRowsInBoard; i++)
 	{
 		if ((connectNBoard[i][columnChosen] == 1) && (playerID == 1))
@@ -266,6 +287,7 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//Counts the number of pieces of a certain player below the piece that was placed
 	for(i = vertLOC + 1; i < numRowsInBoard; i++)
 	{
 		if(connectNBoard[i][columnChosen] == 2 && playerID == 2)
@@ -299,16 +321,18 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//Adds the beforeCount and the actual location and check if it's greater than numConnect
 	if ( beforeCount  >= numConnect )
 	{      
 		return true;
 	}
-
+	
+	//Resets the values of beforeCount to 0
 	beforeCount = 0;
 	afterCount = 0;
 
-	// Horizontal check to the right of column Chosen
-
+	//Counts the pieces of the current player to the right of the most recently placed piece
+	//Adds that value to afterCount
 	for(i = columnChosen + 1; i < numRowsInBoard; i++)
 	{
 		if(connectNBoard[vertLOC][i] == 2 && playerID == 2)
@@ -325,8 +349,8 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
-	// Horizontal check to the left of column chosen
-
+	//Counts the pieces of the current player to the left of the most recently placed piece
+	//Adds that value to beforeCount
 	for(i = columnChosen - 1; i >= 0; i--)
 	{
 		if(connectNBoard[vertLOC][i] == 2 && playerID == 2)
@@ -343,17 +367,22 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//Adds both afterCount and beforeCount and 1
+	//If this value is greater than numConnect, return true
 	if((beforeCount + afterCount + 1) >= numConnect)
 	{
 		return true;
 	}
 
+	//Resets the values of k, beforeCount and afterCount
 	beforeCount = 0;
 	afterCount = 0;
 	k = 0;
 
 
-	//Diagonal Checker to the bottom right of columnChosen
+	//Counts the number of pieces of the given player to the bottom right of the piece
+	//Adds this value to afterCount
+	//k is used to move the column of the board to the right by 1 each time around the loop
 	for(i = vertLOC + 1; i < numRowsInBoard; i++)
 	{
 		k += 1;
@@ -376,9 +405,12 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//resets the value of k
 	k = 0;
 
-	//Diagonal Checker to the top left of columnChosen
+	//Counts the number of pieces of the given player to the top left, and adds them to beforeCount
+	//k is used to move the location of the board column to the left by one each time
+	//around the loop
 	for(i = vertLOC - 1; i >= 0; i--)
 	{
 		k += 1;
@@ -401,16 +433,21 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//Compares the sum of beforeCount, afterCount and 1 to numConnect
+	//If it is greater or equal to numConnect, return true
 	if(beforeCount + afterCount + 1 >= numConnect)
 	{
 		return true;
 	}
 
+	//Resets all values to 0
 	beforeCount = 0;
 	afterCount = 0;
 	k = 0;
 
-	//Diagonal Checker to the top right of columnChosen
+	//Counts the number of pieces of the given player, to the top right and adds them to afterCount
+	//k is used to move the location of the board column to the right by one each time
+	//around the loop
 	for(i = vertLOC - 1; i >= 0; i--)
 	{
 		k += 1;
@@ -435,7 +472,9 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 
 	k = 0;
 
-	//Diagonal Checker to the bottom left of columnChosen
+	//Counts the number of pieces of the given player, to the bottom left and adds them to beforeCount
+	//k is used to move the location of the board column to the left by one each time
+	//around the loop
 	for(i = vertLOC + 1; i < numRowsInBoard; i++)
 	{
 		k += 1;
@@ -458,6 +497,8 @@ bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRows
 		}
 	}
 
+	//Compares the sum of beforeCount, afterCount, 1 to numConnect
+	//If they are greater than numConnect, return true
 	if((beforeCount + afterCount + 1) >= numConnect)
 	{
 		return true;
