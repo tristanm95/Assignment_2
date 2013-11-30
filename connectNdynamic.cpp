@@ -223,10 +223,10 @@ bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnC
 	//If it isn't, return an error message and prompt for another choice
 	if(columnChosen < 0 || columnChosen >= numRowsInBoard)
 	{
-		cout << "Illegal Move" << endl;
-		cout << "That column is not on the board: try again" << endl;
+		cout << endl << "Illegal Move" << endl;
+		cout << "That column is not on the board: try again" << endl << endl;
 		cout << "Enter the column number where you want to put your piece" << endl;
-		cout << "Column number should be >=0 and <= " << numRowsInBoard - 1 << " " << endl;
+		cout << "Column number should be >=0 and <= " << numRowsInBoard - 1 << " ";
 		return false;
 	}
 	
@@ -234,10 +234,10 @@ bool MakeMove(int** connectNBoard, int numRowsInBoard,  int playeID, int columnC
 	//If it is, then output a message and request another choice
 	if(connectNBoard[0][columnChosen] != 0)
 	{
-		cout << "Illegal Move" << endl;
-		cout << "Column" << columnChosen << "is already completely full try again" << endl;
+		cout << endl << "Illegal Move" << endl;
+		cout << "Column " << columnChosen << " is already completely full try again" << endl << endl;
 		cout << "Enter column number where you want to put your piece" << endl;
-		cout << "Column number should be >= 0 and <= " << numRowsInBoard - 1 << " " << endl;
+		cout << "Column number should be >= 0 and <= " << numRowsInBoard - 1 << " ";
 		return false;
 	}
 	
