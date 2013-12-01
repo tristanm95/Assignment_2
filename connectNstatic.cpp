@@ -13,7 +13,12 @@ bool DisplayBoard (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRow
 bool IntializeBoard(int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 bool CheckWinner (int connectNBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int numConnect, int columnChosen, int playerID);
 
-
+//This program is for the game called connectN. It is played similarily to connect 4, however the board and the number
+//needed to connect are customizable by the players. In this version of the program, static arrays are used instead
+//of dynamic arrays.
+//
+//Date: 11/29/2013
+//Authors: Tristan May, Frank Su, Jason Park, Danielle Sinha
 int main()
 {
 	const int minRowsToWin = 4;
