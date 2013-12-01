@@ -114,9 +114,8 @@ int main()
 		//If the makeMove function returns false, add to the forfeit index,
 		//Clear the stream and cin flag
 		//Request to move again, until the forfeit Index reaches 3
-		while(!(MakeMove(connectNBoardpp, numRows, playerID, colChosen)) && forfeitIndex < 3)
+		for(forfeitIndex = 1; !(MakeMove(connectNBoardpp, numRows, playerID, colChosen)) && forfeitIndex < 3; ++forfeitIndex)
 		{
-			forfeitIndex += 1;
 			cin.clear();
 			cin.sync();
 			cin >> colChosen;
